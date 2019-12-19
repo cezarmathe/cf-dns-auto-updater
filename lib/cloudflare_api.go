@@ -1,6 +1,10 @@
 package lib
 
-import "github.com/cloudflare/cloudflare-go"
+import (
+	"net"
+
+	"github.com/cloudflare/cloudflare-go"
+)
 
 var (
 	// API is the cloudflare api
@@ -17,6 +21,12 @@ func NewAPI(config *Config) error {
 
 	// set the api object
 	API = api
+
+	return nil
+}
+
+// PerformUpdate check the zones from Cloudflare and updates the IPs if necessary
+func PerformUpdate(ip *net.IPAddr, zones []Zone) error {
 
 	return nil
 }
