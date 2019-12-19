@@ -72,7 +72,7 @@ func main() {
 	// get the public ip
 	ip, err := lib.GetPublicIP()
 	if err != nil {
-		fmt.Printf("get public ip error: %s\n", err.Error())
+		fmt.Printf("get public ip error - %s\n", err.Error())
 		os.Exit(1)
 	}
 	fmt.Printf("Public IP: %s\n", ip)
@@ -80,7 +80,7 @@ func main() {
 	// initialize the api
 	err = lib.NewAPI(config)
 	if err != nil {
-		fmt.Printf("initialize cloudflare error: %s\n", err.Error())
+		fmt.Printf("initialize cloudflare error - %s\n", err.Error())
 		os.Exit(1)
 	}
 	fmt.Println("connected to the cloudflare api")
