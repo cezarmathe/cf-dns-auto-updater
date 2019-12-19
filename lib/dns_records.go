@@ -23,7 +23,7 @@ type DNSRecord struct {
 	Content    *net.IPAddr `json:"content,omitempty"`
 }
 
-func (record DNSRecord) String() string {
+func (record *DNSRecord) String() string {
 	return fmt.Sprintf("\n    Type: %s, \n    Name: %s, \n    Identifier: %s, \n    Content: %s\n",
 		record.Type,
 		record.Name,
@@ -42,7 +42,7 @@ func (record DNSRecord) String() string {
 }
 
 // DNSRecords is a type for multiple dns records
-type DNSRecords []DNSRecord
+type DNSRecords []*DNSRecord
 
 func (records DNSRecords) String() string {
 	str := make([]string, len(records))
@@ -51,12 +51,12 @@ func (records DNSRecords) String() string {
 		str[index] = record.String()
 	}
 
-	return fmt.Sprintf("Records: %s", strings.Join(str, "; "))
+	return fmt.Sprintf("Records: %s", strings.Join(str, ""))
 }
 
 // NewDNSRecord creates a new update dns record
-func NewDNSRecord(name string, ip *net.IPAddr) DNSRecord {
-	return DNSRecord{
+func NewDNSRecord(name string, ip *net.IPAddr) *DNSRecord {
+	return &DNSRecord{
 		Type:       DNSRecordType,
 		Name:       name,
 		Identifier: nil,
@@ -65,7 +65,7 @@ func NewDNSRecord(name string, ip *net.IPAddr) DNSRecord {
 }
 
 // JSON returns the json value of this UpdateDNSRecord
-func (record DNSRecord) JSON() (string, error) {
+func (record *DNSRecord) JSON() (string, error) {
 	out, err := json.Marshal(record)
 	if err != nil {
 		return "", err
@@ -76,25 +76,25 @@ func (record DNSRecord) JSON() (string, error) {
 // Zone is a type that represents a domain name and a tld
 // i.e. example.com
 type Zone struct {
-	Name       string      `json:"name"`
-	Identifier *string     `json:"identifier"`
-	Records    []DNSRecord `json:"records"`
+	Name       string     `json:"name"`
+	Identifier *string    `json:"identifier"`
+	Records    DNSRecords `json:"records"`
 }
 
-func (zone Zone) String() string {
+func (zone *Zone) String() string {
 	return fmt.Sprintf("\n Zone - name: %s, identifier: %s, records: %s\n",
-		zone.Name,
+		(*zone).Name,
 		func() string {
 			if zone.Identifier == nil {
 				return "none"
 			}
-			return *zone.Identifier
+			return *(*zone).Identifier
 		}(),
-		zone.Records)
+		(*zone).Records)
 }
 
 // ProcessDNSList processes a list of domain names into zones and records
-func ProcessDNSList(domainNameList []string) ([]Zone, error) {
+func ProcessDNSList(domainNameList []string) ([]*Zone, error) {
 	// if we get an empty domain name list, we pass an error
 	if len(domainNameList) == 0 {
 		return nil, errors.New("empty domain name list")
@@ -129,10 +129,10 @@ func ProcessDNSList(domainNameList []string) ([]Zone, error) {
 	}
 
 	// convert zone map to zone slice
-	zones := make([]Zone, 0)
+	zones := make([]*Zone, 0)
 
 	for _, value := range data {
-		zones = append(zones, *value)
+		zones = append(zones, value)
 	}
 
 	return zones, nil
