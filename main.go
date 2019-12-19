@@ -85,4 +85,9 @@ func main() {
 	}
 	fmt.Println("connected to the cloudflare api")
 
+	err = lib.PerformUpdate(ip, zones)
+	if err != nil {
+		fmt.Printf("perform update error - %s\n", err.Error())
+		os.Exit(1)
+	}
 }
