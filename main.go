@@ -23,6 +23,13 @@ func init() {
 		os.Exit(1)
 	}
 
+	// check if .env should not be loaded
+	noDotEnv, isSet := os.LookupEnv("CF_DNS_AUTO_UPDATER_NO_DOTENV")
+	if isSet && len(noDotEnv) > 0 {
+		fmt.Println("not loading .env")
+		return
+	}
+
 	// load .env
 	err = godotenv.Load()
 	if err != nil {
@@ -51,7 +58,7 @@ func main() {
 	config = new(lib.Config)
 	config.AuthEmail = authEmail
 	config.AuthKey = authKey
-	config.DomainNames = strings.Split(domainNames, ",")
+	config.DomainNames = strings.Split(domainNames, " ")
 	// FIXME 18/12/2019: validate domain names
 
 	fmt.Printf("Domain names to check: %s\n", config.DomainNames)
