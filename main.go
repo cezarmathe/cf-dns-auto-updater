@@ -85,9 +85,11 @@ func main() {
 	}
 	fmt.Println("connected to the cloudflare api")
 
-	err = lib.PerformUpdate(ip, zones)
+	err = lib.LoadIdentifiers(&zones)
 	if err != nil {
-		fmt.Printf("perform update error - %s\n", err.Error())
+		fmt.Printf("load identifiers error - %s\n", err.Error())
 		os.Exit(1)
 	}
+
+	fmt.Printf("%s: %s\n", "Zone list(with identifiers)", zones)
 }
