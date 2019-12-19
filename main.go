@@ -20,7 +20,7 @@ func init() {
 	_, err := http.Get("https://1.1.1.1")
 	if err != nil {
 		fmt.Println("no internet connection")
-		os.Exit(0)
+		os.Exit(1)
 	}
 
 	// load .env
@@ -28,20 +28,22 @@ func init() {
 	if err != nil {
 		fmt.Printf("error opening .env - %s\n", err.Error())
 	}
+}
 
+func main() {
 	// load the configuration
-	authEmail, empty := os.LookupEnv("CF_DNS_AUTO_UPDATER_AUTH_EMAIL")
-	if empty {
+	authEmail, isSet := os.LookupEnv("CF_DNS_AUTO_UPDATER_AUTH_EMAIL")
+	if !isSet || len(authEmail) == 0 {
 		fmt.Println("CF_DNS_AUTO_UPDATER_AUTH_EMAIL not set")
 		os.Exit(1)
 	}
-	authKey, empty := os.LookupEnv("CF_DNS_AUTO_UPDATER_AUTH_KEY")
-	if empty {
+	authKey, isSet := os.LookupEnv("CF_DNS_AUTO_UPDATER_AUTH_KEY")
+	if !isSet || len(authKey) == 0 {
 		fmt.Println("CF_DNS_AUTO_UPDATER_AUTH_KEY not set")
 		os.Exit(1)
 	}
-	domainNames, empty := os.LookupEnv("CF_DNS_AUTO_UPDATER_DOMAIN_NAMES")
-	if empty {
+	domainNames, isSet := os.LookupEnv("CF_DNS_AUTO_UPDATER_DOMAIN_NAMES")
+	if !isSet || len(domainNames) == 0 {
 		fmt.Println("CF_DNS_AUTO_UPDATER_DOMAIN_NAMES not set")
 		os.Exit(1)
 	}
@@ -51,8 +53,6 @@ func init() {
 	config.AuthKey = authKey
 	config.DomainNames = strings.Split(domainNames, ",")
 	// FIXME 18/12/2019: validate domain names
-}
 
-func main() {
-	fmt.Println("Hello, world!")
+	fmt.Printf("Domain names to check: %s\n", config.DomainNames)
 }
