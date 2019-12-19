@@ -3,6 +3,7 @@ package lib
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"net"
 	"strings"
 )
@@ -16,17 +17,50 @@ const (
 // DNSRecord is a type that contains the body of a dns record that
 // needs to be updated
 type DNSRecord struct {
-	Type    string      `json:"type"`
-	Name    string      `json:"name"`
-	Content *net.IPAddr `json:"content,omitempty"`
+	Type       string      `json:"type"`
+	Name       string      `json:"name"`
+	Identifier *string     `json:"identifier,omitempty"`
+	Content    *net.IPAddr `json:"content,omitempty"`
+}
+
+func (record DNSRecord) String() string {
+	return fmt.Sprintf("\n    Type: %s, \n    Name: %s, \n    Identifier: %s, \n    Content: %s\n",
+		record.Type,
+		record.Name,
+		func() string {
+			if record.Identifier == nil {
+				return "none"
+			}
+			return *record.Identifier
+		}(),
+		func() string {
+			if record.Content == nil {
+				return "none"
+			}
+			return record.Content.String()
+		}())
+}
+
+// DNSRecords is a type for multiple dns records
+type DNSRecords []DNSRecord
+
+func (records DNSRecords) String() string {
+	str := make([]string, len(records))
+
+	for index, record := range records {
+		str[index] = record.String()
+	}
+
+	return fmt.Sprintf("Records: %s", strings.Join(str, "; "))
 }
 
 // NewDNSRecord creates a new update dns record
 func NewDNSRecord(name string, ip *net.IPAddr) DNSRecord {
 	return DNSRecord{
-		Type:    DNSRecordType,
-		Name:    name,
-		Content: ip,
+		Type:       DNSRecordType,
+		Name:       name,
+		Identifier: nil,
+		Content:    ip,
 	}
 }
 
@@ -43,8 +77,20 @@ func (record DNSRecord) JSON() (string, error) {
 // i.e. example.com
 type Zone struct {
 	Name       string      `json:"name"`
-	Identifier string      `json:"identifier"`
+	Identifier *string     `json:"identifier"`
 	Records    []DNSRecord `json:"records"`
+}
+
+func (zone Zone) String() string {
+	return fmt.Sprintf("\n Zone - name: %s, identifier: %s, records: %s\n",
+		zone.Name,
+		func() string {
+			if zone.Identifier == nil {
+				return "none"
+			}
+			return *zone.Identifier
+		}(),
+		zone.Records)
 }
 
 // ProcessDNSList processes a list of domain names into zones and records
