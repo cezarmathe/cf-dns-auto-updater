@@ -24,7 +24,7 @@ type DNSRecord struct {
 }
 
 func (record *DNSRecord) String() string {
-	return fmt.Sprintf("\n    Type: %s, \n    Name: %s, \n    Identifier: %s, \n    Content: %s\n",
+	return fmt.Sprintf("\n    Type: %s \n    Name: %s \n    Identifier: %s \n    Content: %s\n",
 		record.Type,
 		record.Name,
 		func() string {
@@ -51,7 +51,7 @@ func (records DNSRecords) String() string {
 		str[index] = record.String()
 	}
 
-	return fmt.Sprintf("Records: %s", strings.Join(str, ""))
+	return fmt.Sprintf("%s", strings.Join(str, ""))
 }
 
 // NewDNSRecord creates a new update dns record
