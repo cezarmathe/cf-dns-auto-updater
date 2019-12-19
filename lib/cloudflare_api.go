@@ -71,5 +71,33 @@ func LoadIdentifiers(zones *[]*Zone) error {
 
 // PerformUpdate actually does the update
 func PerformUpdate(ip *net.IPAddr, zones *[]*Zone) error {
+	for _, zone := range *zones {
+		fmt.Printf("checking dns records for zone %s\n", zone.Name)
+
+		// flag for determining whether any updates were made
+		noUpdates := true
+
+		for _, dnsRecord := range (*zone).Records {
+
+			// if ip addresses are not the same, attempt to do an update
+			if dnsRecord.Content.String() != ip.String() {
+				fmt.Printf("updating %s\n", dnsRecord.Name)
+				err := API.UpdateDNSRecord(*zone.Identifier, *dnsRecord.Identifier, cloudflare.DNSRecord{
+					Name:    dnsRecord.Name,
+					Type:    dnsRecord.Type,
+					Content: ip.String(),
+				})
+				if err != nil {
+					return err
+				}
+
+				noUpdates = false
+			}
+		}
+
+		if noUpdates {
+			fmt.Printf("no updates for %s\n", zone.Name)
+		}
+	}
 	return nil
 }
