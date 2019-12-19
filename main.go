@@ -61,7 +61,13 @@ func main() {
 	config.DomainNames = strings.Split(domainNames, " ")
 	// FIXME 18/12/2019: validate domain names
 
-	fmt.Printf("Domain names to check: %s\n", config.DomainNames)
+	// IDEA 19/12/2019: add caching mechanism for domain names
+	zones, err := lib.ProcessDNSList(config.DomainNames)
+	if err != nil {
+		fmt.Printf("error processing domain names - %s\n", err.Error())
+		os.Exit(1)
+	}
+	fmt.Printf("%s: %s\n", "Zone list", zones)
 
 	// get the public ip
 	ip, err := lib.GetPublicIP()
@@ -78,4 +84,5 @@ func main() {
 		os.Exit(1)
 	}
 	fmt.Println("connected to the cloudflare api")
+
 }
