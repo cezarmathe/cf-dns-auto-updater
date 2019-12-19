@@ -70,4 +70,12 @@ func main() {
 		os.Exit(1)
 	}
 	fmt.Printf("Public IP: %s\n", ip)
+
+	// initialize the api
+	err = lib.NewAPI(config)
+	if err != nil {
+		fmt.Printf("initialize cloudflare error: %s\n", err.Error())
+		os.Exit(1)
+	}
+	fmt.Println("connected to the cloudflare api")
 }
