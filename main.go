@@ -91,5 +91,13 @@ func main() {
 		os.Exit(1)
 	}
 
-	fmt.Printf("%s: %s\n", "Zone list(with identifiers)", zones)
+	fmt.Printf("%s: %s\n", "Zone list(loaded)", zones)
+
+	err = lib.PerformUpdate(ip, &zones)
+	if err != nil {
+		fmt.Printf("perform update error - %s\n", err.Error())
+		os.Exit(1)
+	}
+
+	fmt.Println("SUCCESS")
 }
