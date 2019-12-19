@@ -62,4 +62,12 @@ func main() {
 	// FIXME 18/12/2019: validate domain names
 
 	fmt.Printf("Domain names to check: %s\n", config.DomainNames)
+
+	// get the public ip
+	ip, err := lib.GetPublicIP()
+	if err != nil {
+		fmt.Printf("get public ip error: %s\n", err.Error())
+		os.Exit(1)
+	}
+	fmt.Printf("Public IP: %s\n", ip)
 }
