@@ -1,4 +1,4 @@
 language: go
 
 install:
-  - go mod download
+  - go get -u
