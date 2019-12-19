@@ -2,6 +2,7 @@ package lib
 
 import (
 	"fmt"
+	"net"
 
 	"github.com/cloudflare/cloudflare-go"
 )
@@ -55,11 +56,20 @@ func LoadIdentifiers(zones *[]*Zone) error {
 				return fmt.Errorf("more than one dns record on cloudflare exists for this specification %s", dnsRecord)
 			}
 
-			// get the identifier
+			// get the identifier and the ip
 			rec := recs[0]
 			(*dnsRecord).Identifier = &(rec.ID)
+			(*dnsRecord).Content, err = net.ResolveIPAddr("", rec.Content)
+			if err != nil {
+				return err
+			}
 		}
 	}
 
+	return nil
+}
+
+// PerformUpdate actually does the update
+func PerformUpdate(ip *net.IPAddr, zones *[]*Zone) error {
 	return nil
 }
