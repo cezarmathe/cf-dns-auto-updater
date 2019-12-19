@@ -118,7 +118,8 @@ func ProcessDNSList(domainNameList []string) ([]*Zone, error) {
 		// if the zone does not already exist, create it
 		if data[zoneName] == nil {
 			data[zoneName] = new(Zone)
-		} else if data[zoneName].Name == "" {
+		}
+		if data[zoneName].Name == "" {
 			data[zoneName].Name = zoneName
 		}
 
