@@ -12,7 +12,8 @@ Run `go install github.com/cezarmathe/cf-dns-auto-updater`.
 
 ## Downloading a binary
 
-Head to the [Releases](https://github.com/cezarmathe/cf-dns-auto-updater/releases) page and download the binary for your machine.
+Head to the [Releases](https://github.com/cezarmathe/cf-dns-auto-updater/releases)
+page and download the binary for your machine.
 
 # Usage
 
