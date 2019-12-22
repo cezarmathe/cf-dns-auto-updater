@@ -1,0 +1,11 @@
+[Unit]
+Description=Update a set of domain name records on Cloudflare
+Requires=network.target
+
+[Timer]
+OnBootSec=1min
+OnUnitActiveSec=1m
+Unit=cf-dns-auto-update@%i.service
+
+[Install]
+WantedBy=timers.target

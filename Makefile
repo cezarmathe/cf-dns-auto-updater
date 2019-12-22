@@ -1,22 +1,23 @@
-GOOS=linux
-TARGET=amd64
+SRC=main.go lib/*.go
 
-all: vet build test
+all: build
 
 # Build recipes
-build: $(TARGET)
+build: build_linux-amd64 build_linux-arm-v7 build_darwin-amd64
 
-$(TARGET): build/cf-dns-auto-updater_$(TARGET)
+build_linux-amd64: $(SRC)
+	GOOS=linux GOARCH=amd64 \
+		go build \
+		-o build/cf-dns-auto-updater_linux-amd64
 
-build/cf-dns-auto-updater_$(TARGET):
-	GOARCH=$(TARGET) go build -o build/cf-dns-auto-updater_$(TARGET)
+build_linux-arm-v7: $(SRC)
+	GOOS=linux GOARCH=arm GOARM=7 \
+		go build -o build/cf-dns-auto-updater_linux-armv7
+
+build_darwin-amd64: $(SRC)
+	GOOS=darwin GOARCH=amd64 \
+		go build -o build/cf-dns-auto-updater_darwin-amd64
 # ===============
 
 clean:
 	rm -r build
-
-vet:
-	go vet
-
-test:
-	go test
