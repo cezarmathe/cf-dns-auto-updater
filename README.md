@@ -1,5 +1,7 @@
 # cf-dns-auto-updater
 
+**DEPRECATED - CHECK https://github.com/cezarmathe/qazx**
+
 A tool that automatically updates Cloudflare A DNS records with new
 IPs. It's a hack for overcoming a dynamic IP when you are hosting a
 server.
